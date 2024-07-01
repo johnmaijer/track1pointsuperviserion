@@ -88,7 +88,7 @@ if __name__ == '__main__':
             opt.pth_dir = opt.save_log + pth_dir
             print(opt.test_dataset_name)
             for model_name in opt.model_names:
-                if model_name in pth_dir:
-                    opt.model_name = model_name
+                # if model_name in pth_dir:
+                  opt.model_name = model_name
             test()
         print('\n')
