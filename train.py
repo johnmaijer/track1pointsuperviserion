@@ -22,7 +22,7 @@ train.py和train_full.py不同之处可能就是在update_gt_mask这部分工作
 parser = argparse.ArgumentParser(description="PyTorch LESPS train")
 parser.add_argument("--model_names", default=['SCTransNet'], nargs='+',
                     help="model_name: 'ACM', 'ALCNet', 'DNANet', 'SCTransNet'")
-parser.add_argument("--dataset_names", default=['POINT-SIRST'], nargs='+',
+parser.add_argument("--dataset_names", default=['NUAA-SIRST'], nargs='+',
                     help="dataset_name: 'NUAA-SIRST', 'NUDT-SIRST', 'IRSTD-1K', 'NUDT-SIRST-Sea', 'SIRST3'")
 # label_type就是给masks加后缀的(if label_type == centroid gt_dir= masks_centroid)
 parser.add_argument("--label_type", default='coarse', type=str, help="label type: centroid, coarse")
@@ -35,7 +35,7 @@ parser.add_argument("--img_norm_cfg", default=None, type=dict,
                     help="specific a img_norm_cfg, default=None (using img_norm_cfg values of each dataset)")
 
 parser.add_argument("--dataset_dir", default='./datasets/', type=str, help="train_dataset_dir, default: './datasets/SIRST3")
-parser.add_argument("--batchSize", type=int, default=4, help="Training batch sizse, default: 16")
+parser.add_argument("--batchSize", type=int, default=8, help="Training batch sizse, default: 16")
 parser.add_argument("--patchSize", type=int, default=256, help="Training patch size, default: 256")
 parser.add_argument("--save", default='./log', type=str, help="Save path, default: './log")
 parser.add_argument("--resume", default=None, type=str, help="Resume path, default: None")
@@ -77,7 +77,7 @@ def train():
     best_mIOU = 0
     best_idx_epoch = 0
     best_Pd = 0
-    best_pth = opt.save + '/' + opt.dataset_name + '/' + opt.save_perdix + '_best.pth.tar'
+    best_pth = opt.save + '/' + opt.dataset_name + '/' + 'best.pth.tar'
     net = Net(model_name=opt.model_name, mode='train').cuda()
     if opt.resume:
         ckpt = torch.load(opt.resume)
@@ -165,6 +165,7 @@ def train():
                 save_checkpoint({
                     'state_dict': net.state_dict(),
                 }, best_pth)
+
                 best_mIOU = result1[1] * 100
                 best_Pd = result2[0] * 100
                 best_idx_epoch = idx_epoch + 1
@@ -191,9 +192,11 @@ def train():
                 best_source = source
                 best_mIOU = result1[1] * 100
                 best_Pd = result2[0] * 100
+
                 save_checkpoint({
                     'state_dict': net.state_dict(),
                 }, best_pth)
+
                 best_idx_epoch = idx_epoch + 1
 
             update_epoch_loss.append(total_loss_list[-1])
@@ -256,7 +259,7 @@ def test(save_pth):
     # 按照比赛要求设计模型得分
     source = get_model_sources(results1, results2)
     if source == 0:
-        print("当前epoch的FA过高,大于1e-4")
+        print("当前得分为0")
     else:
         print(f"模型的得分为:{source}")
     ############################
