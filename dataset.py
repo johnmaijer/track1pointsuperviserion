@@ -94,13 +94,18 @@ class Update_mask(Dataset):
         
     def __getitem__(self, idx):
         img = Image.open(self.dataset_dir + '/images/' + self.train_list[idx] + '.png').convert('I')
-        mask = Image.open(self.dataset_dir + '/masks/' + self.train_list[idx] + '.png')
+        mask = Image.open(self.dataset_dir + '/masks_'  + self.label_type + '/' + self.train_list[idx] + '.png')
+        # masks_update是string类型的时候，masks_update传入的是文件路径
         if isinstance(self.masks_update, str):
             mask_update = Image.open(self.masks_update + '/' + self.train_list[idx] + '.png')
+            # update_dir 更新后的masks的存储路径
             update_dir = self.masks_update + '/' + self.train_list[idx] + '.png'
+            # 归一化操作
             mask_update = np.array(mask_update, dtype=np.float32)  / 255.0
             if len(mask_update.shape) > 2:
+                # reshape
                 mask_update = mask_update[:,:,0]
+        #masks_update是list类型的时候，masks_update传入的是一组masks数据
         elif isinstance(self.masks_update, list):
             mask_update = self.masks_update[idx]
             update_dir = idx
@@ -113,12 +118,13 @@ class Update_mask(Dataset):
         
         h, w = img.shape
         times = 32
+         #reshape成模型能接受的形状
         img = np.pad(img, ((0, (h//times+1)*times-h),(0, (w//times+1)*times-w)), mode='constant')
         mask = np.pad(mask, ((0, (h//times+1)*times-h),(0, (w//times+1)*times-w)), mode='constant')
         mask_update = np.pad(mask_update, ((0, (h//times+1)*times-h),(0, (w//times+1)*times-w)), mode='constant')
         
         img, mask, mask_update = img[np.newaxis,:], mask[np.newaxis,:], mask_update[np.newaxis,:]
-        
+        # numpy ---> tensor
         img = torch.from_numpy(np.ascontiguousarray(img))
         mask = torch.from_numpy(np.ascontiguousarray(mask))
         mask_update = torch.from_numpy(np.ascontiguousarray(mask_update))
@@ -139,7 +145,7 @@ class TestSetLoader(Dataset):
             
     def __getitem__(self, idx):
         img = Image.open(self.dataset_dir + '/images/' + self.test_list[idx] + '.png').convert('I')
-        mask = Image.open(self.dataset_dir + '/masks/' + self.test_list[idx] + '.png')
+        mask = Image.open(self.dataset_dir + '/masks_coarse/' + self.test_list[idx] + '.png')
         
         img = Normalized(np.array(img, dtype=np.float32), self.img_norm_cfg)
         mask = np.array(mask, dtype=np.float32)  / 255.0
