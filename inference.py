@@ -11,12 +11,10 @@ from tqdm import tqdm
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 parser = argparse.ArgumentParser(description="PyTorch LESPS test")
-parser.add_argument("--model_names", default=['ACM', 'ALCNet', 'DNANet'], nargs='+', help="model_name: 'ACM', 'ALCNet', 'DNANet'")
-parser.add_argument("--pth_dirs", default=['SIRST3/ACM_full.pth.tar','SIRST3/ACM_LESPS_centroid.pth.tar','SIRST3/ACM_LESPS_coarse.pth.tar',
-                                           'SIRST3/ALCNet_full.pth.tar','SIRST3/ALCNet_LESPS_centroid.pth.tar','SIRST3/ALCNet_LESPS_coarse.pth.tar',
-                                           'SIRST3/DNANet_full.pth.tar','SIRST3/DNANet_LESPS_centroid.pth.tar','SIRST3/DNANet_LESPS_coarse.pth.tar',], 
+parser.add_argument("--model_names", default=['SCTransNet'], nargs='+', help="model_name: 'ACM', 'ALCNet', 'DNANet'")
+parser.add_argument("--pth_dirs", default=['NUAA-SIRST/best.pth.tar'],
                                             nargs='+', help="checkpoint dir, default=None")
-parser.add_argument("--dataset_names", default=['NUAA-SIRST', 'NUDT-SIRST', 'IRSTD-1K'], nargs='+', 
+parser.add_argument("--dataset_names", default=['NUAA-SIRST'], nargs='+',
                     help="dataset_name: 'NUAA-SIRST', 'NUDT-SIRST', 'IRSTD-1K', 'SIRST3', 'NUDT-SIRST-Sea'")
 parser.add_argument("--img_norm_cfg", default=None, type=dict,
                     help="specific a img_norm_cfg, default=None (using img_norm_cfg values of each dataset)")
@@ -31,6 +29,7 @@ parser.add_argument("--save_img_dir", type=str, default='./results/', help="path
 parser.add_argument("--save_log", type=str, default='./log/', help="path of saved .pth")
 parser.add_argument("--threshold", type=float, default=0.5)
 parser.add_argument("--patchSize", type=int, default=2048, help="Training patch size, default: 512")
+
 
 global opt
 opt = parser.parse_args()
@@ -88,7 +87,6 @@ if __name__ == '__main__':
             opt.pth_dir = opt.save_log + pth_dir
             print(opt.test_dataset_name)
             for model_name in opt.model_names:
-                # if model_name in pth_dir:
-                  opt.model_name = model_name
+                    opt.model_name = model_name
             test()
         print('\n')
