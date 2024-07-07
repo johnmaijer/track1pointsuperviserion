@@ -179,10 +179,10 @@ class Attention_org(nn.Module):
         attn3 = (q3 @ k.transpose(-2, -1)) / math.sqrt(self.KV_size)
         attn4 = (q4 @ k.transpose(-2, -1)) / math.sqrt(self.KV_size)
 
-        attention_probs1 = self.softmax(self.psi(attn1))
-        attention_probs2 = self.softmax(self.psi(attn2))
-        attention_probs3 = self.softmax(self.psi(attn3))
-        attention_probs4 = self.softmax(self.psi(attn4))
+        attention_probs1 = F.softshrink(self.softmax(self.psi(attn1)), 0.5)
+        attention_probs2 = F.softshrink(self.softmax(self.psi(attn2)), 0.5)
+        attention_probs3 = F.softshrink(self.softmax(self.psi(attn3)), 0.5)
+        attention_probs4 = F.softshrink(self.softmax(self.psi(attn4)), 0.5)
 
         out1 = (attention_probs1 @ v)
         out2 = (attention_probs2 @ v)
