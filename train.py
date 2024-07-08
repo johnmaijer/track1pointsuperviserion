@@ -29,10 +29,10 @@ parser.add_argument("--dataset_names", default=['NUAA-SIRST'], nargs='+',
 # label_type就是给masks加后缀的(if label_type == centroid gt_dir= masks_centroid)
 parser.add_argument("--label_type", default='coarse', type=str, help="label type: centroid, coarse")
 parser.add_argument("--LESPS_Tepoch", default=50, type=int, help="Initial evolution epoch, default: 50")
-parser.add_argument("--LESPS_Tloss", default=0.6, type=int, help="Tb in evolution threshold, default: 0.5")
+parser.add_argument("--LESPS_Tloss", default=7.7e-5, type=int, help="Tb in evolution threshold, default: 0.5")
 parser.add_argument("--LESPS_Tb", default=0.5, type=float, help="Tb in evolution threshold, default: 0.5")
 parser.add_argument("--LESPS_k", default=0.5, type=float, help="k in evolution threshold, default: 0.5")
-parser.add_argument("--LESPS_f", default=0.6, type=int, help="Evolution frequency, default: 5")
+parser.add_argument("--LESPS_f", default=5, type=int, help="Evolution frequency, default: 5")
 parser.add_argument("--img_norm_cfg", default=None, type=dict,
                     help="specific a img_norm_cfg, default=None (using img_norm_cfg values of each dataset)")
 
