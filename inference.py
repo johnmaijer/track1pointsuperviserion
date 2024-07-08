@@ -28,7 +28,7 @@ parser.add_argument("--save_img", default=True, type=bool, help="save image of o
 parser.add_argument("--save_img_dir", type=str, default='./results/', help="path of saved image")
 parser.add_argument("--save_log", type=str, default='./log/', help="path of saved .pth")
 parser.add_argument("--threshold", type=float, default=0.5)
-parser.add_argument("--patchSize", type=int, default=2048, help="Training patch size, default: 512")
+parser.add_argument("--patchSize", type=int, default=512, help="Training patch size, default: 512")
 
 
 global opt
