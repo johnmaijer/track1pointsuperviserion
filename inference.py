@@ -51,7 +51,8 @@ def test():
     eval_PD_FA = PD_FA()
     with torch.no_grad():
         for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
-            img = Variable(img).cuda()
+            # img = Variable(img).cuda()
+            img = img.cuda()
             b, c, h, w = img.shape
             if h > opt.patchSize and w > opt.patchSize:
                 img_unfold = F.unfold(img[:,:,:,:], opt.patchSize, stride=opt.patchSize)
