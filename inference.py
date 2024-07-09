@@ -71,13 +71,25 @@ def test():
             else: 
                 pred = net.forward(img)  
             pred = pred[:,:,:size[0],:size[1]]
+            pred_binary = (pred >= opt.threshold).int() #  0.3393620839349927根据模型输出信息，做的一个topk均值处理
+            non_zero_indices = pred_binary.nonzero()
+            num_non_zero = non_zero_indices.size(0)  # 获取非零元素的数量
+            # print(f"num_non_zero:{num_non_zero}, pred_binary[0,:,:size[0],:size[1]]:{pred_binary[0, :, :size[0], :size[1]]}")
+            # 腐蚀操作
+            if num_non_zero >=  20 * 1.2: # 49.89 数据集中综合所有样本中小样本像素的均值, 1.2超参
+                eroded_operate_kernel = np.ones((1, 2), dtype=np.uint8)
+                pred_binary = cv2.erode(pred_binary.squeeze().cpu().detach().numpy().astype(np.uint8)* 255, eroded_operate_kernel, iterations=1)
+            else:
+                pred_binary = pred_binary.squeeze().cpu().detach().numpy().astype(np.uint8)* 255
+            # pred_binary = torch.from_numpy(np.ascontiguousarray(pred_binary)).unsqueeze(0).unsqueeze(0).to(pred.device)
             ### save img
             model_name = opt.pth_dir.split('/')[-1] .split('.')[0]
             if opt.save_img == True:
-                img_save = transforms.ToPILImage()((pred[0,:,:size[0],:size[1]]).cpu())
+                # img_save = transforms.ToPILImage()((pred[0,:,:size[0],:size[1]]).cpu())
+                img_save = Image.fromarray(pred_binary)
                 if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + model_name ):
                     os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + model_name )
-                img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + model_name + '/' + img_dir[0] + '.png')  
+                img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + model_name + '/' + img_dir[0] + '.png')
 
 if __name__ == '__main__':
     for pth_dir in opt.pth_dirs:
