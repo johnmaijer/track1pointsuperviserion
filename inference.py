@@ -8,7 +8,7 @@ from metrics import *
 import os
 import time
 from tqdm import tqdm
-
+import cv2
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 parser = argparse.ArgumentParser(description="PyTorch LESPS test")
 parser.add_argument("--model_names", default=['SCTransNet'], nargs='+', help="model_name: 'ACM', 'ALCNet', 'DNANet'")
