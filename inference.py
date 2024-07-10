@@ -29,7 +29,7 @@ parser.add_argument("--save_img_dir", type=str, default='./results/', help="path
 parser.add_argument("--save_log", type=str, default='./log/', help="path of saved .pth")
 parser.add_argument("--threshold", type=float, default=0.5)
 parser.add_argument("--patchSize", type=int, default=512, help="Training patch size, default: 512")
-parser.add_argument("--post_process", type=str, default=None, help="the post process for the output of the net. Default: MultiThresholds, corrode")
+parser.add_argument("--post_process", type=str, default='MultiThresholds', help="the post process for the output of the net. Default: MultiThresholds, corrode")
 
 global opt
 opt = parser.parse_args()
