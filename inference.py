@@ -83,7 +83,7 @@ def test():
             多重阈值融合分割优化
             '''
             if opt.post_process == 'MultiThresholds':
-                   thresholds = [0.2, 0.4, 0.6, 0.8]  # 多级阈值
+                   thresholds = [0.4, 0.5, 0.6, 0.7]  # 多级阈值
                    binary_masks = []
                    for threshold in thresholds:
                        pred_binary = (pred >= threshold).int()
